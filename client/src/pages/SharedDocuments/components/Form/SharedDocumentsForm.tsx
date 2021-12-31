@@ -1,5 +1,5 @@
 import { Col, Row, Form, Input, Button, message } from 'antd';
-import { DoclockAPI } from '@services/doclockAPI';
+import { DocZenAPI } from '@services/docZenAPI';
 import fileDownload from 'js-file-download';
 import { useAppSelector } from '@hooks/rtk-hooks';
 
@@ -15,7 +15,7 @@ const SharedDocumentsForm = () => {
     pass?: string;
   }) => {
     const { filename, file, error } =
-      await DoclockAPI.getInstance().downloadSharedDocument(
+      await DocZenAPI.getInstance().downloadSharedDocument(
         auth0AccessToken!,
         refId,
         pass

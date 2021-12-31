@@ -3,8 +3,8 @@ import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 /**
  * Here will be several api methods that does not require caching and could be called without rtk-query
  */
-export class DoclockAPI {
-  private static _instance: DoclockAPI;
+export class DocZenAPI {
+  private static _instance: DocZenAPI;
   private readonly API: AxiosInstance;
 
   private constructor() {
@@ -63,7 +63,7 @@ export class DoclockAPI {
   };
 
   public static getInstance = () => {
-    if (!DoclockAPI._instance) DoclockAPI._instance = new DoclockAPI();
-    return DoclockAPI._instance;
+    if (!DocZenAPI._instance) DocZenAPI._instance = new DocZenAPI();
+    return DocZenAPI._instance;
   };
 }

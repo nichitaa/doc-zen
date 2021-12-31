@@ -34,5 +34,5 @@ app.use(
 );
 
 app.listen(PORT, () =>
-  console.log(`doclock proxy is running on port: ${PORT}`)
+  console.log(`doc-zen proxy is running on port: ${PORT}`)
 );

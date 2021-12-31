@@ -105,7 +105,7 @@ const LayoutWrapper = ({ children }) => {
         </div>
       </div>
       <footer style={{ paddingLeft: sidebarCollapsed ? '80px' : '220px' }}>
-        🤡 doclock pbl ©2021 🤡
+        🤡 doc-zen pbl ©2021 🤡
       </footer>
     </>
   );

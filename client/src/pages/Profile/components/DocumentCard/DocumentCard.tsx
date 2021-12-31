@@ -6,7 +6,7 @@ import PasswordModal from '@pages/Profile/components/PasswordModal/PasswordModal
 import { documentsAPI } from '@feature/documents/documents-api-slice';
 import { useAppSelector } from '@hooks/rtk-hooks';
 import fileDownload from 'js-file-download';
-import { DoclockAPI } from '@services/doclockAPI';
+import { DocZenAPI } from '@services/docZenAPI';
 import DocumentCardModal from '@pages/Profile/components/DocumentCard/DocumentCardModal';
 import './card-styles.less';
 
@@ -27,7 +27,7 @@ const DocumentCard = ({ data }: { data: IDocument }) => {
 
   const downloadDocument = async (pass?: string) => {
     const { filename, file, error } =
-      await DoclockAPI.getInstance().downloadDocument(
+      await DocZenAPI.getInstance().downloadDocument(
         auth0AccessToken!,
         data._id,
         pass

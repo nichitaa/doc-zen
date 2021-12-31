@@ -62,7 +62,7 @@ export class App {
   public listen = () => {
     const PORT = Number(process.env.PORT) || 8080;
     this.app.listen(PORT, () =>
-      console.log(`DocLock API running on PORT: ${PORT}`)
+      console.log(`doc-zen API running on PORT: ${PORT}`)
     );
   };
 }

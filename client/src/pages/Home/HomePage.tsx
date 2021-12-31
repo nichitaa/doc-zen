@@ -27,7 +27,7 @@ const HomePage = () => {
             transition={{ duration: 1 }}
           >
             <Title style={{ color: '#1890ff' }} level={4}>
-              What is doclock ?
+              What is doc-zen ?
             </Title>
           </motion.div>
         </Col>
