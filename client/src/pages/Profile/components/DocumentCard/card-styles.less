@@ -1,0 +1,42 @@
+@import "config/variables";
+
+.app-doc-container {
+  transition: ease 400ms;
+
+  .app-doc-card {
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.5);
+
+    .ant-card-body {
+      padding: 15px;
+    }
+
+    &:hover {
+      .ant-card-body {
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+        rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+        background-color: rgba(255, 255, 255, 0.9);
+      }
+    }
+
+    .doc-name {
+      color: rgba(0, 0, 0, 0.8);
+    }
+
+    .doc-tag {
+      //width: 100%;
+      text-align: center;
+    }
+  }
+
+  .doc-description {
+    font-size: 0.8rem;
+  }
+
+  .doc-timestamp {
+    font-size: 0.7rem;
+  }
+}
