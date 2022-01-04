@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Player, Controls } from '@lottiefiles/react-lottie-player';
+import { Controls, Player } from '@lottiefiles/react-lottie-player';
 
 interface MainProps {
   lotti: any;
@@ -10,12 +10,12 @@ interface MainProps {
 }
 
 const LottieAnimation: FC<MainProps> = ({
-  lotti,
-  loop,
-  speed,
-  width,
-  height,
-}) => {
+                                          lotti,
+                                          loop,
+                                          speed,
+                                          width,
+                                          height,
+                                        }) => {
   const [_, setSpeedLottie] = useState(1);
 
   useEffect(() => {

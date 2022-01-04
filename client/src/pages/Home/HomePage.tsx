@@ -3,7 +3,6 @@ import homeLottie from '@assets/lottie-animations/home.json';
 import LottieAnimation from '@components/shared/LottieAnimation/LottieAnimation';
 import { useAuth0 } from '@auth0/auth0-react';
 import { motion } from 'framer-motion';
-import { LoginOutlined } from '@ant-design/icons';
 import { Button, Col, Divider, Row, Timeline, Typography } from 'antd';
 
 const { Title, Paragraph, Text } = Typography;

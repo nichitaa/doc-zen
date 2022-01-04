@@ -1,4 +1,4 @@
-import { Col, Row, Form, Input, Button, message } from 'antd';
+import { Button, Col, Form, Input, message, Row } from 'antd';
 import { DocZenAPI } from '@services/docZenAPI';
 import fileDownload from 'js-file-download';
 import { useAppSelector } from '@hooks/rtk-hooks';
@@ -8,9 +8,9 @@ const SharedDocumentsForm = () => {
   const [form] = Form.useForm();
 
   const onDownload = async ({
-    refId,
-    pass,
-  }: {
+                              refId,
+                              pass,
+                            }: {
     refId: string;
     pass?: string;
   }) => {
@@ -18,7 +18,7 @@ const SharedDocumentsForm = () => {
       await DocZenAPI.getInstance().downloadSharedDocument(
         auth0AccessToken!,
         refId,
-        pass
+        pass,
       );
 
     if (error) return message.error(error, 4);

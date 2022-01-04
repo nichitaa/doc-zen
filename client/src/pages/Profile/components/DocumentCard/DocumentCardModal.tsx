@@ -1,18 +1,5 @@
 import React, { FC, useState } from 'react';
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  Modal,
-  Row,
-  DatePicker,
-  Select,
-  Tooltip,
-  message,
-  Checkbox,
-  Tag,
-} from 'antd';
+import { Button, Checkbox, Col, DatePicker, Form, Input, message, Modal, Row, Select, Tag, Tooltip } from 'antd';
 import { nanoid } from 'nanoid';
 import { DocumentTypesEnum, IDocument } from '@models/IDocument';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -31,11 +18,11 @@ interface MainProps {
 }
 
 const DocumentCardModal: FC<MainProps> = ({
-  doc,
-  isVisible,
-  onDownload,
-  close,
-}) => {
+                                            doc,
+                                            isVisible,
+                                            onDownload,
+                                            close,
+                                          }) => {
   const [isRevision, setIsRevision] = useState<boolean>(doc.isRevision);
 
   const [deleteDoc, { isLoading: isDeleteLoading }] =
@@ -52,7 +39,7 @@ const DocumentCardModal: FC<MainProps> = ({
   };
 
   const deleteDocument = async (
-    event: React.MouseEvent<HTMLSpanElement, MouseEvent>
+    event: React.MouseEvent<HTMLSpanElement, MouseEvent>,
   ) => {
     event.stopPropagation();
     const response = await deleteDoc(doc._id);

@@ -1,15 +1,10 @@
 import React from 'react';
-import { Avatar, Button, Col, Row, Typography } from 'antd';
+import { Avatar, Col, Row, Typography } from 'antd';
 import { motion, Variants } from 'framer-motion';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useAppDispatch } from '@hooks/rtk-hooks';
 import { clearToken } from '@feature/authorization/authorization-slice';
-import {
-  GoogleOutlined,
-  LogoutOutlined,
-  MailOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { GoogleOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import './header-styles.less';
 
 const { Title, Text } = Typography;

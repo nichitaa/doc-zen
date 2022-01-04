@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Card, Col, message, Row, Skeleton, Tag, Badge } from 'antd';
+import { Card, Col, message, Row, Skeleton, Tag } from 'antd';
 import { IDocument } from '@models/IDocument';
 import { motion } from 'framer-motion';
 import PasswordModal from '@pages/Profile/components/PasswordModal/PasswordModal';
-import { documentsAPI } from '@feature/documents/documents-api-slice';
 import { useAppSelector } from '@hooks/rtk-hooks';
 import fileDownload from 'js-file-download';
 import { DocZenAPI } from '@services/docZenAPI';
@@ -30,7 +29,7 @@ const DocumentCard = ({ data }: { data: IDocument }) => {
       await DocZenAPI.getInstance().downloadDocument(
         auth0AccessToken!,
         data._id,
-        pass
+        pass,
       );
 
     if (error) return message.error(error, 4);

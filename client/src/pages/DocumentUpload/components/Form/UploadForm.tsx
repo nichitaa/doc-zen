@@ -5,18 +5,7 @@ import LottieAnimation from '@components/shared/LottieAnimation/LottieAnimation'
 import docPreviewLottie from '@assets/lottie-animations/doc-preview.json';
 import { documentsAPI } from '@feature/documents/documents-api-slice';
 import { DocumentTypesEnum, IDocument } from '@models/IDocument';
-import {
-  Button,
-  Checkbox,
-  Col,
-  Form,
-  Input,
-  message,
-  Row,
-  Select,
-  Tooltip,
-  Upload,
-} from 'antd';
+import { Button, Checkbox, Col, Form, Input, message, Row, Select, Tooltip, Upload } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import './form-styless.less';
 
@@ -52,7 +41,7 @@ const UploadForm = () => {
         parentId: values.documentRevisionParent
           ? values.documentRevisionParent
           : null,
-      })
+      }),
     );
 
     const response = await createDocument(formData);
@@ -87,7 +76,8 @@ const UploadForm = () => {
       console.log('files dropped: ', e.dataTransfer.files.length);
     },
     multiple: false,
-    previewFile: (file) => {},
+    previewFile: (file) => {
+    },
     listType: 'picture',
   };
 

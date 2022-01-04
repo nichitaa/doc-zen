@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 /**
  * Here will be several api methods that does not require caching and could be called without rtk-query
@@ -13,10 +13,15 @@ export class DocZenAPI {
     });
   }
 
+  public static getInstance = () => {
+    if (!DocZenAPI._instance) DocZenAPI._instance = new DocZenAPI();
+    return DocZenAPI._instance;
+  };
+
   public downloadDocument = async (
     token: string,
     docId: string,
-    pass?: string
+    pass?: string,
   ): Promise<{ file: Blob; filename: string; error?: string }> => {
     const config: AxiosRequestConfig = {
       headers: {
@@ -29,7 +34,7 @@ export class DocZenAPI {
     const queryParam = pass ? `?pass=${pass}` : ``;
     const res = await this.API.get(
       `/document/download/${docId}${queryParam}`,
-      config
+      config,
     );
     if (res.status !== 200) return JSON.parse(await res.data.text());
     return {
@@ -41,7 +46,7 @@ export class DocZenAPI {
   public downloadSharedDocument = async (
     token: string,
     refId: string,
-    pass?: string
+    pass?: string,
   ): Promise<{ file: Blob; filename: string; error?: string }> => {
     const config: AxiosRequestConfig = {
       headers: {
@@ -60,10 +65,5 @@ export class DocZenAPI {
       file: res.data,
       filename: res.headers.filename,
     };
-  };
-
-  public static getInstance = () => {
-    if (!DocZenAPI._instance) DocZenAPI._instance = new DocZenAPI();
-    return DocZenAPI._instance;
   };
 }
