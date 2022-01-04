@@ -1,6 +1,6 @@
 import React from 'react';
 import passwordLottie from '@assets/lottie-animations/password.json';
-import { Button, Form, Input, message, Modal } from 'antd';
+import { Button, Form, Input, Modal } from 'antd';
 import LottieAnimation from '@components/shared/LottieAnimation/LottieAnimation';
 import { motion } from 'framer-motion';
 import './modal-styles.less';

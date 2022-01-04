@@ -2,23 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Layout, Menu } from 'antd';
 import {
-  UnlockOutlined,
   LockOutlined,
+  LoginOutlined,
+  LogoutOutlined,
+  ShareAltOutlined,
+  UnlockOutlined,
   UploadOutlined,
   UserOutlined,
-  LogoutOutlined,
-  LoginOutlined,
-  ShareAltOutlined,
 } from '@ant-design/icons';
 import './layout-styles.less';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@hooks/rtk-hooks';
 import { clearToken } from '@feature/authorization/authorization-slice';
+import ThemeSwitcher from '@components/shared/ThemeSwitcher';
 
 const { Sider } = Layout;
 
 const LayoutWrapper = ({ children }) => {
   const { isAuthenticated, logout, loginWithPopup } = useAuth0();
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -96,6 +98,9 @@ const LayoutWrapper = ({ children }) => {
               }
             >
               {isAuthenticated ? 'Logout' : 'Login'}
+            </Menu.Item>
+            <Menu.Item key={'toggle-theme'}>
+              <ThemeSwitcher />
             </Menu.Item>
           </Menu>
         </Sider>

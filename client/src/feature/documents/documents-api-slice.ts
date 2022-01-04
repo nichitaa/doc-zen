@@ -15,19 +15,15 @@ export const documentsAPI = createApi({
   }),
   tagTypes: ['Documents'],
   endpoints: (build) => ({
-    fetchDocuments: build.query<
-      { data: IDocument[]; isSuccess: boolean; error?: string },
-      null
-    >({
+    fetchDocuments: build.query<{ data: IDocument[]; isSuccess: boolean; error?: string },
+      null>({
       query: () => ({
         url: `/document`,
       }),
       providesTags: (result) => ['Documents'],
     }),
-    createDocument: build.mutation<
-      { isSuccess: boolean; message?: string; error?: string },
-      FormData
-    >({
+    createDocument: build.mutation<{ isSuccess: boolean; message?: string; error?: string },
+      FormData>({
       query: (document) => ({
         url: `/document`,
         method: `POST`,
@@ -35,10 +31,8 @@ export const documentsAPI = createApi({
       }),
       invalidatesTags: (result) => ['Documents'],
     }),
-    deleteDocument: build.mutation<
-      { isSuccess: boolean; message?: string; error?: string },
-      string
-    >({
+    deleteDocument: build.mutation<{ isSuccess: boolean; message?: string; error?: string },
+      string>({
       query: (docId) => ({
         url: `/document/${docId}`,
         method: `DELETE`,

@@ -63,7 +63,7 @@ const DocumentList = () => {
   const fuseSearch = (
     array: IDocument[],
     keys: string[],
-    value: string
+    value: string,
   ): IDocument[] => {
     const fuse = new Fuse(array, { keys: keys });
     return fuse.search(value).map((el) => el.item);
