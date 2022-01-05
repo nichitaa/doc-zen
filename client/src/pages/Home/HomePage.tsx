@@ -25,7 +25,7 @@ const HomePage = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
           >
-            <Title style={{ color: '#1890ff' }} level={4}>
+            <Title level={4}>
               What is doc-zen ?
             </Title>
           </motion.div>

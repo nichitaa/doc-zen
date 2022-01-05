@@ -10,16 +10,18 @@ import {
   UploadOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import './layout-styles.less';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@hooks/rtk-hooks';
 import { clearToken } from '@feature/authorization/authorization-slice';
-import ThemeSwitcher from '@components/shared/ThemeSwitcher';
+import { FaRegMoon, FaRegSun } from 'react-icons/fa';
+import { useThemeSwitcher } from 'react-css-theme-switcher';
+import './layout-styles.less';
 
 const { Sider } = Layout;
 
 const LayoutWrapper = ({ children }) => {
   const { isAuthenticated, logout, loginWithPopup } = useAuth0();
+  const { switcher, themes, currentTheme } = useThemeSwitcher();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -52,12 +54,9 @@ const LayoutWrapper = ({ children }) => {
           collapsed={sidebarCollapsed}
         >
           <Menu
-            theme={'light'}
             mode='inline'
             defaultSelectedKeys={['1']}
-            selectedKeys={
-              location.pathname === '/profile' ? ['/home'] : [location.pathname]
-            }
+            selectedKeys={location.pathname === '/profile' ? ['/home'] : [location.pathname]}
           >
             <Menu.Item
               onClick={toggle}
@@ -68,9 +67,7 @@ const LayoutWrapper = ({ children }) => {
             <Menu.Item
               key='/home'
               icon={<UserOutlined />}
-              onClick={() => {
-                isAuthenticated ? navigate('/profile') : navigate('/');
-              }}
+              onClick={() => isAuthenticated ? navigate('/profile') : navigate('/')}
             >
               {isAuthenticated ? 'Profile' : 'Home'}
             </Menu.Item>
@@ -93,14 +90,18 @@ const LayoutWrapper = ({ children }) => {
             <Menu.Item
               key={'logout-login'}
               icon={isAuthenticated ? <LogoutOutlined /> : <LoginOutlined />}
-              onClick={() =>
-                isAuthenticated ? userLogout() : loginWithPopup()
-              }
+              onClick={() => isAuthenticated ? userLogout() : loginWithPopup()}
             >
               {isAuthenticated ? 'Logout' : 'Login'}
             </Menu.Item>
-            <Menu.Item key={'toggle-theme'}>
-              <ThemeSwitcher />
+            <Menu.Divider />
+
+            <Menu.Item
+              icon={currentTheme === 'light' ? <FaRegSun /> : <FaRegMoon />}
+              key={'toggle-theme'}
+              onClick={() => switcher({ theme: currentTheme === 'light' ? themes.dark : themes.light })}
+            >
+              Change to {currentTheme === 'light' ? 'Dark Theme' : 'Light Theme'}
             </Menu.Item>
           </Menu>
         </Sider>
