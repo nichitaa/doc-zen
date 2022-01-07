@@ -57,7 +57,9 @@ export class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({extended: true}));
     this.app.use(csurf({
-      cookie: true,
+      cookie: {
+        sameSite: 'none'
+      },
       value: (req: Request) => req.headers['x-csrf-token'] as string
     }))
     // keep logic with userId only for client app
