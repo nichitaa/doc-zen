@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { DocumentModel, IDocument } from '../model/Document';
-import { isLocalEnv, isEmpty } from '../../../utils';
-import { APIResponse, BaseParams } from '../../../types/api';
+import { DocumentModel, IDocument } from './model/Document';
+import { isLocalEnv, isEmpty } from '../../utils';
+import { APIResponse, BaseParams } from '../../types/api';
 
 export default class DocumentMiddleware {
   private readonly isLocal: boolean = isLocalEnv();

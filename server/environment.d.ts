@@ -1,6 +1,8 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
+      CORS_ORIGIN: string;
+
       NODE_ENV: string;
       API_PORT: string;
 
