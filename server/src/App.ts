@@ -58,7 +58,8 @@ export class App {
     this.app.use(express.urlencoded({extended: true}));
     this.app.use(csurf({
       cookie: {
-        sameSite: 'none'
+        sameSite: 'none',
+        secure: true
       },
       value: (req: Request) => req.headers['x-csrf-token'] as string
     }))
