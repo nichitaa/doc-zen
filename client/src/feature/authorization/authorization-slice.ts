@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AuthorizationState {
   auth0AccessToken: string | null;
+  csrfToken: string | null;
 }
 
 const initialState: AuthorizationState = {
   auth0AccessToken: null,
+  csrfToken: null
 };
 
 const authorizationSlice = createSlice({
@@ -18,10 +20,16 @@ const authorizationSlice = createSlice({
     clearToken(state) {
       state.auth0AccessToken = null;
     },
+    setCSRFToken(state, action: PayloadAction<string>) {
+      state.csrfToken = action.payload;
+    },
+    clearCSRFToken(state) {
+      state.csrfToken = null;
+    }
   },
 });
 
-export const { setToken, clearToken } = authorizationSlice.actions;
+export const { setToken, clearToken, setCSRFToken, clearCSRFToken } = authorizationSlice.actions;
 export default authorizationSlice.reducer;
 
 

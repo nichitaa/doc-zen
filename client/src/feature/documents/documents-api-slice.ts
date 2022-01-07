@@ -7,11 +7,13 @@ export const documentsAPI = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_REACT_APP_API_BASE_URL as string,
     prepareHeaders: (headers, { getState }) => {
-      const accessToken = (getState() as RootState).authorization
-        .auth0AccessToken;
-      if (accessToken) headers.set('Authorization', `Bearer ${accessToken}`);
+      const { auth0AccessToken, csrfToken } = (getState() as RootState).authorization;
+      if (auth0AccessToken) headers.set('Authorization', `Bearer ${auth0AccessToken}`);
+      if (csrfToken) headers.set('x-csrf-token', csrfToken);
       return headers;
     },
+    credentials: 'include',
+    mode: 'cors'
   }),
   tagTypes: ['Documents'],
   endpoints: (build) => ({

@@ -18,6 +18,24 @@ export class DocZenAPI {
     return DocZenAPI._instance;
   };
 
+  public getCSRFToken = async (): Promise<string | undefined> => {
+    try {
+      const config: AxiosRequestConfig = {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      };
+      const res = await this.API.get<{ csrfToken: string }>(`/auth-csrf`, config);
+      const { csrfToken } = res.data;
+      return csrfToken;
+    } catch (e) {
+      console.log('error on getting csrf token: ', e);
+    }
+  };
+
   public downloadDocument = async (
     token: string,
     docId: string,
