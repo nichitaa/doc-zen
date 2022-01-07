@@ -221,7 +221,10 @@ const UploadForm = () => {
                   block={true}
                   danger={true}
                   type='dashed'
-                  onClick={() => form.resetFields()}
+                  onClick={() => {
+                    setFileList([])
+                    form.resetFields();
+                  }}
                 >
                   Reset
                 </Button>

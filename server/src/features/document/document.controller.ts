@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
-import { DocumentModel, IDocument } from '../model/Document';
+import {Request, Response} from 'express';
+import {DocumentModel, IDocument} from './model/Document';
 import * as bcrypt from 'bcrypt';
-import { AzureBlobService } from '../../../services/AzureBlobService/AzureBlobService';
-import { config } from 'dotenv';
-import { isLocalEnv } from '../../../utils';
-import { APIResponse, BaseParams } from '../../../types/api';
+import {AzureBlobService} from '../../services/AzureBlobService/AzureBlobService';
+import {config} from 'dotenv';
+import {isLocalEnv} from '../../utils';
+import {APIResponse, BaseParams} from '../../types/api';
 
 config();
 
@@ -18,45 +18,33 @@ export default class DocumentController {
   }
 
   public getSharedDocument = async (
-    req: Request<
-      unknown,
+    req: Request<unknown,
       unknown,
       unknown,
       {
         pass?: string;
         refId: string;
-      }
-    >,
+      }>,
     res: Response
   ) => {
     try {
       const refId = req.query.refId;
       const pass = req.query.pass;
 
-      if (!refId)
-        return res.status(400).json({
-          isSuccess: false,
-          error: 'reference ID is required',
-        });
+      if (!refId) throw Error(`reference ID is required`)
 
       const document = await DocumentModel.findOne({
         publicReferenceId: refId,
       }).exec();
 
+      if (!document) throw Error(`no document found with reference ID ${refId}`)
+
       if (document?.password) {
-        if (!pass)
-          return res.status(401).json({
-            isSuccess: false,
-            error: 'This document requires a password',
-          });
+        if (!pass) throw Error(`document requires a password`)
 
         const match = await bcrypt.compare(pass, document.password);
 
-        if (!match)
-          return res.status(401).json({
-            isSuccess: false,
-            error: 'Invalid password',
-          });
+        if (!match) throw Error(`invalid password`)
       }
 
       const stream = await this.azureBlobService.downloadFile(
@@ -81,7 +69,7 @@ export default class DocumentController {
     res: Response<APIResponse<IDocument[]>>
   ) => {
     try {
-      const documents = await DocumentModel.find({ userId: req.userId }).exec();
+      const documents = await DocumentModel.find({userId: req.userId}).exec();
       return res.status(200).json({
         isSuccess: true,
         data: documents,
@@ -104,7 +92,7 @@ export default class DocumentController {
       const file = req.file!;
 
       const payload: IDocument = JSON.parse(req.body.data);
-      const { password } = payload;
+      const {password} = payload;
       const hasPassword = password && password !== '';
       let hashedPassword: string;
       if (hasPassword) {
@@ -123,7 +111,7 @@ export default class DocumentController {
         message: `successfully uploaded new document`,
       });
     } catch (e) {
-      return res.send({ isSuccess: false, error: e.message });
+      return res.send({isSuccess: false, error: e.message});
     }
   };
 
@@ -138,19 +126,11 @@ export default class DocumentController {
       const hashedPassword = req.populatedDocument.password;
 
       if (hashedPassword) {
-        if (!pass)
-          return res.status(401).json({
-            isSuccess: false,
-            error: 'Password is required',
-          });
+        if (!pass) throw Error(`password is required`);
 
         const match = await bcrypt.compare(pass, hashedPassword);
 
-        if (!match)
-          return res.status(401).json({
-            isSuccess: false,
-            error: 'Invalid password',
-          });
+        if (!match) throw Error(`invalid password`)
       }
 
       const stream = await this.azureBlobService.downloadFile(userId, fileName);
@@ -186,7 +166,7 @@ export default class DocumentController {
       const userId = req.userId;
       const doc = req.populatedDocument;
 
-      await DocumentModel.deleteOne({ userId, _id: doc._id });
+      await DocumentModel.deleteOne({userId, _id: doc._id});
       await this.azureBlobService.deleteFile(userId, doc.fileName);
       return res.send({
         isSuccess: true,
@@ -207,7 +187,7 @@ export default class DocumentController {
     try {
       const userId = req.userId;
       const docId = req.params.docId;
-      await DocumentModel.updateOne({ userId, _id: docId }, { ...req.body });
+      await DocumentModel.updateOne({userId, _id: docId}, {...req.body});
       return res.status(200).json({
         isSuccess: true,
         message: `document with id: ${docId}, was successfully updated`,

@@ -1,8 +1,8 @@
-import { AppRouter } from '../../../routes/routes';
+import { AppRouter } from '../../routes/routes';
 import { Router } from 'express';
 import multer from 'multer';
-import DocumentMiddleware from '../middlewares/document.middleware';
-import DocumentController from '../controllers/document.controller';
+import DocumentMiddleware from './document.middleware';
+import DocumentController from './document.controller';
 
 export class DocumentRouter implements AppRouter {
   private readonly router: Router;

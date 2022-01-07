@@ -1,11 +1,13 @@
-import { config } from 'dotenv';
-import express from 'express';
+import {config} from 'dotenv';
+import express, {Request, Response} from 'express';
 import cors from 'cors';
-import { connect } from 'mongoose';
-import { routes } from './routes/routes';
+import {connect} from 'mongoose';
+import {routes} from './routes/routes';
 import jwt from 'express-jwt';
 import jwks from 'jwks-rsa';
-import { isLocalEnv } from './utils';
+import csurf from 'csurf';
+import cookieParser from 'cookie-parser';
+import {isLocalEnv} from './utils';
 
 config();
 
@@ -26,7 +28,7 @@ export class App {
       issuer: `https://${process.env.AUTH0_DOMAIN}/`,
       algorithms: ['RS256'],
     }).unless({
-      path: ['/shared'],
+      path: ['/shared', '/auth-csrf'],
     });
     this.bootstrap();
   }
@@ -47,16 +49,28 @@ export class App {
   };
 
   private initAppMiddlewares = () => {
-    this.app.use(cors());
+    this.app.use(cors({
+      origin: process.env.CORS_ORIGIN,
+      credentials: true
+    }));
+    this.app.use(cookieParser());
     this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
-
+    this.app.use(express.urlencoded({extended: true}));
+    this.app.use(csurf({
+      cookie: true,
+      value: (req: Request) => req.headers['x-csrf-token'] as string
+    }))
     // keep logic with userId only for client app
     if (!isLocalEnv()) this.app.use(this.checkJWT);
   };
 
   private initAppRoutes = () => {
     routes.forEach((route) => this.app.use(route.Router));
+    this.app.get('/auth-csrf', (req: Request, res: Response) => {
+      const csrfToken = req.csrfToken();
+      console.log(`csrf ${csrfToken}`)
+      return res.json({csrfToken})
+    })
   };
 
   public listen = () => {
