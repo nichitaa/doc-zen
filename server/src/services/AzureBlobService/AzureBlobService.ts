@@ -1,12 +1,11 @@
-import { Express } from 'express';
-import { BlobServiceClient } from '@azure/storage-blob';
-import { config } from 'dotenv';
+import {BlobServiceClient} from '@azure/storage-blob';
+import {config} from 'dotenv';
 
 config();
 
 export class AzureBlobService {
-  private readonly azureService;
   private static _instance: AzureBlobService;
+  private readonly azureService;
 
   private constructor() {
     this.azureService = BlobServiceClient.fromConnectionString(
@@ -14,10 +13,11 @@ export class AzureBlobService {
     );
   }
 
-  private createContainer = async (name: string) => {
-    const containerClient = this.azureService.getContainerClient(name);
-    return await containerClient.create().requestId;
-  };
+  public static getInstance(): AzureBlobService {
+    if (!AzureBlobService._instance)
+      AzureBlobService._instance = new AzureBlobService();
+    return AzureBlobService._instance;
+  }
 
   public deleteFile = async (userId: string, fileName: string) => {
     const containerName = userId;
@@ -42,7 +42,8 @@ export class AzureBlobService {
 
   public uploadFile = async (
     userId: string,
-    file: Express.Multer.File
+    buffer: Buffer,
+    fileName: string
   ): Promise<string> => {
     const containerName = userId;
     const containerClient = this.azureService.getContainerClient(containerName);
@@ -51,23 +52,20 @@ export class AzureBlobService {
       await this.createContainer(containerName);
     }
 
-    const blockBlobClient = containerClient.getBlockBlobClient(
-      file.originalname
-    );
+    const blockBlobClient = containerClient.getBlockBlobClient(fileName);
 
     if (await blockBlobClient.exists()) {
       throw new Error(
-        `for container: ${containerName}, the blob: ${file.originalname} already exists!`
+        `for container: ${containerName}, the blob: ${fileName} already exists!`
       );
     }
 
-    await blockBlobClient.upload(file.buffer, file.size);
-    return `file ${file.originalname} was successfully uploaded to storage!`;
+    await blockBlobClient.upload(buffer, buffer.length);
+    return `file ${fileName} was successfully uploaded to storage!`;
   };
 
-  public static getInstance(): AzureBlobService {
-    if (!AzureBlobService._instance)
-      AzureBlobService._instance = new AzureBlobService();
-    return AzureBlobService._instance;
-  }
+  private createContainer = async (name: string) => {
+    const containerClient = this.azureService.getContainerClient(name);
+    return await containerClient.create().requestId;
+  };
 }

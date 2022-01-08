@@ -3,6 +3,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import DocumentMiddleware from './document.middleware';
 import DocumentController from './document.controller';
+import asyncErrorHandler from 'express-async-handler';
 
 export class DocumentRouter implements AppRouter {
   private readonly router: Router;
@@ -14,35 +15,54 @@ export class DocumentRouter implements AppRouter {
     this.initRoutes();
   }
 
+  public get Router(): Router {
+    return this.router;
+  }
+
   private initRoutes = (): void => {
+    /**
+     * asyncErrorHandler - is a required wrapper, that will catch our thrown Exceptions
+     * and pass them to next() middleware so that express could catch it too and pass it
+     * to custom error handlers
+     */
     this.router
       .route(`/document`)
-      .all(this.middleware.populateUserId)
-      .get(this.controller.getAllDocuments)
+      .all(asyncErrorHandler(this.middleware.populateUserId))
+      .get(asyncErrorHandler(this.controller.getAllDocuments))
       .post(
         multer().single(`file`),
-        this.middleware.validateParentId,
-        this.middleware.validateFileExists,
-        this.middleware.validateDocumentFields,
-        this.controller.createDocument
+        asyncErrorHandler(this.middleware.validateParentId),
+        asyncErrorHandler(this.middleware.validateFileExists),
+        asyncErrorHandler(this.middleware.validateDocumentFields),
+        asyncErrorHandler(this.controller.createDocument)
       );
 
     this.router
       .route(`/document/:docId`)
-      .all(this.middleware.populateUserId, this.middleware.populateDocument)
+      .all(
+        asyncErrorHandler(asyncErrorHandler(this.middleware.populateUserId)),
+        asyncErrorHandler(this.middleware.populateDocument)
+      )
       .get(this.controller.findDocument)
-      .patch(this.middleware.validateParentId, this.controller.updateDocument)
-      .delete(this.middleware.validateParentId, this.controller.deleteDocument);
+      .patch(
+        asyncErrorHandler(this.middleware.validateParentId),
+        asyncErrorHandler(this.controller.updateDocument)
+      )
+      .delete(
+        this.middleware.validateParentId,
+        asyncErrorHandler(this.controller.deleteDocument)
+      );
 
     this.router
       .route(`/document/download/:docId`)
-      .all(this.middleware.populateUserId, this.middleware.populateDocument)
-      .get(this.controller.downloadDocument);
+      .all(
+        asyncErrorHandler(this.middleware.populateUserId),
+        asyncErrorHandler(this.middleware.populateDocument)
+      )
+      .get(asyncErrorHandler(this.controller.downloadDocument));
 
-    this.router.route(`/shared`).get(this.controller.getSharedDocument);
+    this.router
+      .route(`/shared`)
+      .get(asyncErrorHandler(this.controller.getSharedDocument));
   };
-
-  public get Router(): Router {
-    return this.router;
-  }
 }

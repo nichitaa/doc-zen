@@ -1,4 +1,4 @@
-import { IDocument } from '../features/document/model/Document';
+import {IDocument} from '../features/document/model/Document';
 
 declare global {
   declare namespace Express {

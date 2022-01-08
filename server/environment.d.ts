@@ -13,6 +13,8 @@ declare global {
       MONGODB_URL: string;
 
       AZURE_BLOB_STORAGE_CONNECTION_STRING: string;
+
+      FILE_ENCRYPTION_KEY: string;
     }
   }
 }

@@ -27,7 +27,7 @@ const DocumentCardModal: FC<MainProps> = ({
 
   const [deleteDoc, { isLoading: isDeleteLoading }] =
     documentsAPI.useDeleteDocumentMutation();
-  const [updateDoc, { isLoading: isUpdateLoading }] =
+  const [updateDoc, { isLoading: isUpdateLoading, error: updateError }] =
     documentsAPI.useUpdateDocumentMutation();
   const { data } = documentsAPI.useFetchDocumentsQuery(null);
 
@@ -65,6 +65,10 @@ const DocumentCardModal: FC<MainProps> = ({
         : null,
     } as IDocument);
     console.log('response: ', res);
+
+    // @ts-ignore
+    if (res?.error?.data?.error) message.error(res.error.data.error);
+
   };
 
   return (

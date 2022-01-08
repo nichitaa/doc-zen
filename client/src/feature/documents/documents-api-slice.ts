@@ -41,7 +41,7 @@ export const documentsAPI = createApi({
       }),
       invalidatesTags: (result) => ['Documents'],
     }),
-    updateDocument: build.mutation<{}, IDocument>({
+    updateDocument: build.mutation<{isSuccess: boolean, message?: string, error?: string}, IDocument>({
       query: (doc) => ({
         url: `/document/${doc._id}`,
         method: `PATCH`,

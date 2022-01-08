@@ -1,13 +1,14 @@
-import {config} from 'dotenv';
-import express, {Request, Response} from 'express';
+import { config } from 'dotenv';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
-import {connect} from 'mongoose';
-import {routes} from './routes/routes';
+import { connect } from 'mongoose';
+import { routes } from './routes/routes';
 import jwt from 'express-jwt';
 import jwks from 'jwks-rsa';
 import csurf from 'csurf';
 import cookieParser from 'cookie-parser';
-import {isLocalEnv} from './utils';
+import { isLocalEnv } from './utils';
+import { errorHandlerMiddleware } from './features/error-handler/error-handler.middleware';
 
 config();
 
@@ -33,11 +34,6 @@ export class App {
     this.bootstrap();
   }
 
-  private bootstrap = async () => {
-    this.initAppMiddlewares();
-    this.initAppRoutes();
-  };
-
   public connectToDB = async () => {
     try {
       const mongoURL = process.env.MONGODB_URL as string;
@@ -48,38 +44,52 @@ export class App {
     }
   };
 
-  private initAppMiddlewares = () => {
-    this.app.use(cors({
-      origin: process.env.CORS_ORIGIN,
-      credentials: true
-    }));
-    this.app.use(cookieParser());
-    this.app.use(express.json());
-    this.app.use(express.urlencoded({extended: true}));
-    this.app.use(csurf({
-      cookie: {
-        sameSite: 'none',
-        secure: true
-      },
-      value: (req: Request) => req.headers['x-csrf-token'] as string
-    }))
-    // keep logic with userId only for client app
-    if (!isLocalEnv()) this.app.use(this.checkJWT);
-  };
-
-  private initAppRoutes = () => {
-    routes.forEach((route) => this.app.use(route.Router));
-    this.app.get('/auth-csrf', (req: Request, res: Response) => {
-      const csrfToken = req.csrfToken();
-      console.log(`csrf ${csrfToken}`)
-      return res.json({csrfToken})
-    })
-  };
-
   public listen = () => {
     const PORT = Number(process.env.PORT) || 8080;
     this.app.listen(PORT, () =>
       console.log(`doc-zen API running on PORT: ${PORT}`)
     );
+  };
+
+  private bootstrap = async () => {
+    this.initAppMiddlewares();
+    this.initAppRoutes();
+  };
+
+  private initAppMiddlewares = () => {
+    this.app.use(
+      cors({
+        origin: process.env.CORS_ORIGIN,
+        credentials: true,
+      })
+    );
+    this.app.use(cookieParser());
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+
+    /**  Disabling CSRF and JWT on local postman testing */
+    if (!isLocalEnv())
+      this.app.use(
+        csurf({
+          cookie: {
+            sameSite: 'none',
+            secure: true,
+          },
+          value: (req: Request) => req.headers['x-csrf-token'] as string,
+        })
+      );
+    if (!isLocalEnv()) this.app.use(this.checkJWT);
+  };
+
+  private initAppRoutes = () => {
+    routes.forEach((route) => this.app.use(route.Router));
+    /** Endpoint to get the CSRF Token */
+    this.app.get('/auth-csrf', (req: Request, res: Response) => {
+      const csrfToken = req.csrfToken();
+      console.log(`csrf ${csrfToken}`);
+      return res.json({ csrfToken });
+    });
+    /** Error Handler Middleware */
+    this.app.use(errorHandlerMiddleware);
   };
 }

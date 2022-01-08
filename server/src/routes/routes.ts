@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { DocumentRouter } from '../features/document/document.router';
+import {Router} from 'express';
+import {DocumentRouter} from '../features/document/document.router';
 import DocumentController from '../features/document/document.controller';
 
 export interface AppRouter {

@@ -1,4 +1,4 @@
-import { model, Schema, Model } from 'mongoose';
+import {model, Model, Schema} from 'mongoose';
 
 export enum DocumentTypesEnum {
   IDENTITY_CARD = 'IDENTITY_CARD',
@@ -74,4 +74,4 @@ const documentSchema: Schema = new Schema(
 
 const DocumentModel: Model<IDocument> = model('Document', documentSchema);
 
-export { DocumentModel };
+export {DocumentModel};
