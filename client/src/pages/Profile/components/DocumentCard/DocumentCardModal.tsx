@@ -118,7 +118,7 @@ const DocumentCardModal: FC<MainProps> = ({
         <Form.Item
           name={'name'}
           label={'Name'}
-          rules={[{ required: true, message: 'document name is required' }]}
+          rules={[{ required: true, message: 'document name is required' }, { whitespace: true }]}
         >
           <Input placeholder={'name e.g.: My Identity card'} />
         </Form.Item>
@@ -126,7 +126,7 @@ const DocumentCardModal: FC<MainProps> = ({
         <Form.Item
           label='Description'
           name='description'
-          rules={[{ required: true, message: 'document name is required' }]}
+          rules={[{ required: true, message: 'document name is required' }, { whitespace: true }]}
         >
           <TextArea
             placeholder={

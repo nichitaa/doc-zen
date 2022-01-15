@@ -55,11 +55,12 @@ const PasswordModal: React.FC<MainProps> = ({ isVisible, onSubmit, close }) => {
               required: true,
               message: 'The document access password is required!',
             },
+            { whitespace: true }
           ]}
         >
           <Input.Password
             placeholder={'Enter the document password'}
-            maxLength={9}
+            maxLength={30}
           />
         </Form.Item>
         <Form.Item>

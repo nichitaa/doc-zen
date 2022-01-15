@@ -54,7 +54,7 @@ const SharedDocumentsForm = () => {
             <Input maxLength={30} placeholder={'kQ1A64-tP2'} />
           </Form.Item>
           <Form.Item label={'Password'} name={'pass'}>
-            <Input.Password maxLength={9} placeholder={'optional'} />
+            <Input.Password maxLength={30} placeholder={'optional'} />
           </Form.Item>
           <Form.Item wrapperCol={{ span: 24 }} labelCol={{ span: 24 }}>
             <Button block={true} type={'primary'} htmlType={'submit'}>

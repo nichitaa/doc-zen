@@ -18,6 +18,7 @@ const { TextArea } = Input;
 const UploadForm = () => {
   const [isRevision, setIsRevision] = useState<boolean>(false);
   const [fileList, setFileList] = useState<any[]>([]);
+  const [password, setPassword] = useState<string>();
   const [form] = Form.useForm();
   const { data } = documentsAPI.useFetchDocumentsQuery(null);
   const [createDocument, { isLoading: isUploadDocumentLoading }] =
@@ -99,14 +100,14 @@ const UploadForm = () => {
           <Form.Item
             label='Name'
             name='name'
-            rules={[{ required: true, message: requiredMsg }]}
+            rules={[{ required: true, message: requiredMsg }, { whitespace: true }]}
           >
             <Input maxLength={30} placeholder={'My CI'} />
           </Form.Item>
           <Form.Item
             label='Description'
             name='description'
-            rules={[{ required: true, message: requiredMsg }]}
+            rules={[{ required: true, message: requiredMsg }, { whitespace: true }]}
           >
             <TextArea
               placeholder={'2022 CI - John Doe - expiring on 01.01.2030'}
@@ -136,20 +137,63 @@ const UploadForm = () => {
           <Tooltip
             placement={'top'}
             title={
-              'A document password will represent a higher level of document security'
+              password && password.trim() !== ''
+                ? <>
+                  <strong>Strong password requirements:</strong>
+                  <ul>
+                    <li>At least 7 characters long</li>
+                    <li>At least one uppercase letter</li>
+                    <li>At least one lowercase letter</li>
+                    <li>At least one digit</li>
+                    <li>At least one special character</li>
+                  </ul>
+                </>
+                : 'A document password will represent a higher level of document security'
             }
           >
             <Form.Item
               label='Password'
               name='password'
-              rules={[{ required: false }]}
+              hasFeedback={!!(password && password.trim() !== '')}
+              rules={[{
+                required: false,
+              }, { whitespace: true }, {
+                pattern: new RegExp(`(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{7,})`),
+                message: 'password is not strong enough',
+              }]}
             >
               <Input.Password
-                maxLength={9}
+                value={password}
+                onChange={event => setPassword(event.target.value)}
+                maxLength={20}
                 placeholder={'Secure document access with a password'}
               />
             </Form.Item>
           </Tooltip>
+
+          {password && password.trim() !== '' &&
+            <Form.Item
+              label='Confirm password'
+              name='confirmPassword'
+              dependencies={['password']}
+              hasFeedback={true}
+              rules={[{ required: !!(password && password.trim() !== '') },
+                { whitespace: true },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password
+                maxLength={20}
+                placeholder={'Confirm the password'}
+              />
+            </Form.Item>}
 
           <Form.Item
             label={'This is a existing document revision'}
@@ -222,7 +266,7 @@ const UploadForm = () => {
                   danger={true}
                   type='dashed'
                   onClick={() => {
-                    setFileList([])
+                    setFileList([]);
                     form.resetFields();
                   }}
                 >
