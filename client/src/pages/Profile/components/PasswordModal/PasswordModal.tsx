@@ -17,7 +17,7 @@ const PasswordModal: React.FC<MainProps> = ({ isVisible, onSubmit, close }) => {
   const [form] = Form.useForm();
 
   const onFormSubmitSuccess = (values) => {
-    onSubmit(values.password);
+    onSubmit(encodeURIComponent(values.password));
     form.resetFields();
   };
 
