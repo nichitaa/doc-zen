@@ -29,6 +29,8 @@ const UploadForm = () => {
   };
 
   const onFinish = async (values: any) => {
+    console.log('values: ', values);
+    if (values.gdprConsent) return message.error('The GDPR consent is required');
     const formData = new FormData();
     formData.append('file', fileList[0]);
     formData.append(
@@ -246,6 +248,11 @@ const UploadForm = () => {
               </p>
               <p className='ant-upload-hint'>Upload single document</p>
             </Dragger>
+          </Form.Item>
+
+          <Form.Item valuePropName='checked' name={'gdprConsent'} labelCol={{ span: 23 }}
+                     label={'I agree to the processing of personal data'}>
+            <Checkbox />
           </Form.Item>
 
           <Form.Item>
