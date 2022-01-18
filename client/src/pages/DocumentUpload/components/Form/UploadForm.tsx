@@ -30,7 +30,7 @@ const UploadForm = () => {
 
   const onFinish = async (values: any) => {
     console.log('values: ', values);
-    if (values.gdprConsent) return message.error('The GDPR consent is required');
+    if (!values.gdprConsent) return message.error('The GDPR consent is required');
     const formData = new FormData();
     formData.append('file', fileList[0]);
     formData.append(
